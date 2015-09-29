@@ -1,6 +1,5 @@
 import path from 'path';
 import fs from 'fs-promise';
-import cssnext from 'cssnext';
 import postcss from 'postcss';
 import {resolve} from '../lib/async';
 import {catchError} from 'jasmine-es6';
@@ -37,13 +36,13 @@ describe('PostCSSCached', function() {
   it('imports CSS files from an npm package', async function() {
     const {css: result} = await process([], 'npm_import.css');
     expect(result).toContain('h1 {\n  color: red;\n}');
-    expect(result).toContain('Bootstrap v3.3.2');
+    expect(result).toContain('Bootstrap v3.3.5');
   });
 
   it('imports the default CSS file from an npm package', async function() {
     const {css: result} = await process([], 'npm_default_import.css');
     expect(result).toContain('h1 {\n  color: red;\n}');
-    expect(result).toContain('Bootstrap v3.3.2');
+    expect(result).toContain('Bootstrap v3.3.5');
   });
 
   it('raises an error when importing a file that does not exist', async function() {
@@ -69,6 +68,7 @@ describe('PostCSSCached', function() {
     expect(actualCss).toEqual(expectedCss);
   });
 
+  /*
   it('supports the cssnext plugin', async function() {
     const {css: actualCss} = await process([cssnext()], 'cssnext.css');
     const {contents: cssnextFixture} = await fixture('cssnext.css');
@@ -76,6 +76,7 @@ describe('PostCSSCached', function() {
       .process(cssnextFixture).async();
     expect(actualCss).toEqual(expectedCss);
   });
+  */
 
   it('caches the result of processing each file', async function() {
     const basicImport = await fixture('basic_import.css');
@@ -92,8 +93,10 @@ describe('PostCSSCached', function() {
     expect(css2).toEqual(css);
   });
 
-  xit('can remove files from the cache', function() {
-    this.processCss('fixtures/basic_import.css').css;
+  it('can remove files from the cache', function() {
+    console.log('THIS', this);
+    const basicImport = this.processCss('fixtures/basic_import.css').css;
+    console.log('basicImport', basicImport);
     expect(this.postcssCached.cache[resolvePath('fixtures/dep1.css')])
       .toBeTruthy();
     this.postcssCached.delete(resolvePath('fixtures/dep1.css'))

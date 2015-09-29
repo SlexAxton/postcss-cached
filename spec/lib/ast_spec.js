@@ -18,7 +18,7 @@ async function setup() {
 
 function importRules(root) {
   const rules = [];
-  root.eachAtRule('import', rule => rules.push(rule));
+  root.walkAtRules('import', rule => rules.push(rule));
   return rules;
 }
 
